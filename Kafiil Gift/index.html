@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; frame-src https://kafiil.com; script-src 'self'; style-src 'self' 'unsafe-inline';">
+    <meta name="description" content="إنجز أعمالك ومشاريعك عبر الإنترنت بسهولة من خلال أمهر المستقلين.">
+    <meta name="author" content="موقعك">
+    <meta name="robots" content="index, follow">
     <title>إنجز أعمالك ومشاريعك عبر الإنترنت من خلال أمهر المستقلين</title>
     <style>
         /* تنسيق الصفحة */
@@ -11,47 +15,31 @@
             margin: 0;
             padding: 0;
             background-color: #f9f9f9;
-            overflow: hidden;
         }
 
         /* تنسيق الإطار */
         iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
+            position: relative;
+            display: block;
             width: 100%;
-            height: 100%;
+            height: calc(100vh - 60px);
             border: none;
-            opacity: 1; /* تقليل شفافية الإطار */
-            z-index: 2;
-        }
-
-        /* طبقة التغطية */
-        .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(255, 255, 255, 0.7);
-            z-index: 3;
         }
 
         /* تنسيق الزر */
         button {
-            position: absolute;
-            top: 20px;
-            left: 20px;
+            position: relative;
+            margin: 20px auto;
+            display: block;
             padding: 10px 20px;
             font-size: 16px;
             font-weight: bold;
             color: #fff;
-            background-color: #28a745; /* اللون الأخضر الفاتح */
+            background-color: #28a745;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            z-index: 4;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
         }
 
         button:hover {
@@ -68,7 +56,7 @@
     <button id="زر_الاختبار">هدية من العم كاف</button>
 
     <!-- الإطار المستهدف -->
-    <iframe id="الإطار_المستهدف" src="https://kafiil.com"></iframe>
+    <iframe id="الإطار_المستهدف" src="https://kafiil.com" title="Kafiil"></iframe>
 
     <script>
         // إضافة حدث عند الضغط على الزر
