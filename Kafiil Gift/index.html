@@ -27,9 +27,9 @@
 
         /* تنسيق الزر */
         button {
-            position: relative;
-            margin: 20px auto;
-            display: block;
+            position: absolute;
+            top: 20px;
+            left: 20px; /* الزر على يسار الموقع */
             padding: 10px 20px;
             font-size: 16px;
             font-weight: bold;
@@ -39,6 +39,7 @@
             border-radius: 5px;
             cursor: pointer;
             text-align: center;
+            z-index: 10; /* فوق الإطار */
         }
 
         button:hover {
@@ -52,16 +53,16 @@
 </head>
 <body>
     <!-- الزر التفاعلي -->
-    <button id="زر_الاختبار">هدية من العم كاف</button>
+    <button id="testButton">هدية من العم كاف</button>
 
     <!-- الإطار المستهدف -->
-    <iframe id="الإطار_المستهدف" src="https://kafiil.com" title="Kafiil"></iframe>
+    <iframe id="targetIframe" src="https://kafiil.com" title="Kafiil"></iframe>
 
     <script>
         // إضافة حدث عند الضغط على الزر
-        document.getElementById('زر_الاختبار').addEventListener('click', function() {
-            // إعادة توجيه المستخدم إلى صفحة الهدايا
-            window.location.href = "gift-page.html";
+        document.getElementById("testButton").addEventListener('click', function() {
+            // التأكد من أن الملف gift-page.html موجود
+            window.location.href = "gift-page.html"; // تأكد من صحة المسار
         });
     </script>
 </body>
